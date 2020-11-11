@@ -32,9 +32,6 @@ output_dir = FLAGS.output_dir
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
-color_map_file = os.path.join(hdf5_data_dir, 'part_color_mapping.json')
-color_map = json.load(open(color_map_file, 'r'))
-
 all_obj_cats_file = os.path.join(hdf5_data_dir, 'all_object_categories.txt')
 fin = open(all_obj_cats_file, 'r')
 lines = [line.rstrip() for line in fin.readlines()]
