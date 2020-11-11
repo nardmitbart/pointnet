@@ -22,7 +22,7 @@ parser.add_argument('--output_dir', type=str, default='train_results', help='Dir
 parser.add_argument('--wd', type=float, default=0, help='Weight Decay [Default: 0.0]')
 FLAGS = parser.parse_args()
 
-hdf5_data_dir = os.path.join(BASE_DIR, './hdf5_data')
+hdf5_data_dir = os.path.join(BASE_DIR, './my_data')
 
 # MAIN SCRIPT
 point_num = FLAGS.point_num
