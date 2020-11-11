@@ -1,3 +1,7 @@
 part_seg/hdf5_data/
 part_seg/my_data/
 .vscode/
+__pycache__/
+part_seg/__pycache__/
+utils/__pycache__/
+
