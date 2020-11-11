@@ -32,6 +32,7 @@ output_dir = FLAGS.output_dir
 if not os.path.exists(output_dir):
     os.mkdir(output_dir)
 
+# read info about categories from text files
 all_obj_cats_file = os.path.join(hdf5_data_dir, 'all_object_categories.txt')
 fin = open(all_obj_cats_file, 'r')
 lines = [line.rstrip() for line in fin.readlines()]
