@@ -42,7 +42,7 @@ all_obj_cats = [(line.split()[0], line.split()[1]) for line in lines]
 fin.close()
 
 all_cats = json.load(open(os.path.join(hdf5_data_dir, 'overallid_to_catid_partid.json'), 'r'))
-NUM_CATEGORIES = 16
+NUM_CATEGORIES = 2
 NUM_PART_CATS = len(all_cats)
 
 print('#### Batch Size: {0}'.format(batch_size))
