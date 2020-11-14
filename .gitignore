@@ -4,4 +4,5 @@ part_seg/my_data/
 __pycache__/
 part_seg/__pycache__/
 utils/__pycache__/
+train_results/
 
