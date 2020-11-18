@@ -5,4 +5,5 @@ __pycache__/
 part_seg/__pycache__/
 utils/__pycache__/
 train_results/
+sem_seg/indoor3d_sem_seg_hdf5_data/
 
