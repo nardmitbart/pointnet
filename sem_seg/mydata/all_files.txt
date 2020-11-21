@@ -1,0 +1,3 @@
+/home/felix/Desktop/prj/data/testtest/train0.h5
+/home/felix/Desktop/prj/data/testtest/train1.h5
+/home/felix/Desktop/prj/data/testtest/test.h5
