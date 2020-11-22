@@ -8,3 +8,4 @@ train_results/
 sem_seg/indoor3d_sem_seg_hdf5_data/
 log/
 sem_seg/log6/
+log6/
