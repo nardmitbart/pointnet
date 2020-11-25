@@ -194,8 +194,17 @@ def train_one_epoch(sess, ops, train_writer, epoch):
     """ ops: dict mapping from string to tf ops """
     is_training = True
     
+    #print(train_data)
+    #print(train_data.shape) # ((4, 2048, 3))
+    
     log_string('----')
     current_data, current_label, _ = provider.shuffle_data(train_data[:,0:NUM_POINT,:], train_label) 
+    
+    #print(current_label)
+    #print(current_label.shape) # (4, 2048)
+
+    #print(current_data)
+    #print(current_data.shape) # (4, 2048, 3)
     
     file_size = current_data.shape[0]
     num_batches = file_size // BATCH_SIZE
