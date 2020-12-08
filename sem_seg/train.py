@@ -196,6 +196,7 @@ def train_one_epoch(sess, ops, train_writer, epoch):
     
     #print(train_data)
     #print(train_data.shape) # ((4, 2048, 3))
+    #print(type(train_data)) # <class 'numpy.ndarray'>
     
     log_string('----')
     current_data, current_label, _ = provider.shuffle_data(train_data[:,0:NUM_POINT,:], train_label) 
@@ -205,6 +206,7 @@ def train_one_epoch(sess, ops, train_writer, epoch):
 
     #print(current_data)
     #print(current_data.shape) # (4, 2048, 3)
+    #print(type(current_data)) # <class 'numpy.ndarray'>
     
     file_size = current_data.shape[0]
     num_batches = file_size // BATCH_SIZE
