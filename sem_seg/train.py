@@ -25,7 +25,6 @@ class myFloat( float ):
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
 parser.add_argument('--log_dir', default='log6', help='Log dir [default: log]')
-parser.add_argument('--num_point', type=int, default=2048, help='Point number [default: 4096]')
 parser.add_argument('--max_epoch', type=int, default=51, help='Epoch to run [default: 50]')
 parser.add_argument('--batch_size', type=int, default=1, help='Batch Size during training [default: 24]')
 parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
@@ -38,9 +37,7 @@ FLAGS = parser.parse_args()
 
 
 BATCH_SIZE = FLAGS.batch_size
-NUM_POINT = FLAGS.num_point
 MAX_EPOCH = FLAGS.max_epoch
-NUM_POINT = FLAGS.num_point
 BASE_LEARNING_RATE = FLAGS.learning_rate
 GPU_INDEX = FLAGS.gpu
 MOMENTUM = FLAGS.momentum
@@ -55,8 +52,9 @@ os.system('cp train.py %s' % (LOG_DIR)) # bkp of train procedure
 LOG_FOUT = open(os.path.join(LOG_DIR, 'log_train.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
-MAX_NUM_POINT = 2048
-NUM_CLASSES = 2
+NUM_POINT = 4096
+NUM_CLASSES = 13
+NUM_FEATURES = 9
 
 BN_INIT_DECAY = 0.5
 BN_DECAY_DECAY_RATE = 0.5
@@ -66,7 +64,7 @@ BN_DECAY_CLIP = 0.99
 
 HOSTNAME = socket.gethostname()
 
-ALL_FILES = provider.getDataFiles('/home/felix/Desktop/git/pointnet/sem_seg/mydata/all_files.txt')
+ALL_FILES = provider.getDataFiles('/home/felix/Desktop/git/pointnet/sem_seg/indoor3d_sem_seg_hdf5_data/all_files.txt')
 
 # Load ALL data
 data_batch_list = []
@@ -82,6 +80,8 @@ print(label_batches.shape)
 
 train_idxs = [0, 1, 2, 3]
 test_idxs = [4, 5]
+
+# TODO: train test split implementieren
 
 train_data = data_batches[train_idxs,...]
 train_label = label_batches[train_idxs]
@@ -120,7 +120,7 @@ def get_bn_decay(batch):
 def train():
     with tf.Graph().as_default():
         with tf.device('/gpu:'+str(GPU_INDEX)):
-            pointclouds_pl, labels_pl = placeholder_inputs(BATCH_SIZE, NUM_POINT)
+            pointclouds_pl, labels_pl = placeholder_inputs(BATCH_SIZE, NUM_POINT, NUM_FEATURES)
             is_training_pl = tf.placeholder(tf.bool, shape=())
             
             # Note the global_step=batch parameter to minimize. 
@@ -130,7 +130,7 @@ def train():
             tf.summary.scalar('bn_decay', bn_decay)
 
             # Get model and loss 
-            pred = get_model(pointclouds_pl, is_training_pl, bn_decay=bn_decay)
+            pred = get_model(pointclouds_pl, is_training_pl, NUM_FEATURES, NUM_CLASSES, bn_decay=bn_decay)
             loss = get_loss(pred, labels_pl)
             tf.summary.scalar('loss', loss)
 
@@ -292,6 +292,7 @@ def eval_one_epoch(sess, ops, test_writer):
                      ops['is_training_pl']: is_training}
         summary, step, loss_val, pred_val = sess.run([ops['merged'], ops['step'], ops['loss'], ops['pred']],
                                       feed_dict=feed_dict)
+
         test_writer.add_summary(summary, step)
         pred_val = np.argmax(pred_val, 2)
         correct = np.sum(pred_val == current_label[start_idx:end_idx])
