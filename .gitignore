@@ -6,6 +6,7 @@ part_seg/__pycache__/
 utils/__pycache__/
 train_results/
 sem_seg/indoor3d_sem_seg_hdf5_data/
+sem_seg/testdata/
 log/
 sem_seg/log6/
 log6/
