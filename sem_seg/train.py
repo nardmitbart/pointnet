@@ -24,7 +24,7 @@ class myFloat( float ):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu', type=int, default=0, help='GPU to use [default: GPU 0]')
-parser.add_argument('--log_dir', default='log6', help='Log dir [default: log]')
+parser.add_argument('--log_dir', default='log6norm', help='Log dir [default: log]')
 parser.add_argument('--max_epoch', type=int, default=51, help='Epoch to run [default: 50]')
 parser.add_argument('--batch_size', type=int, default=1, help='Batch Size during training [default: 24]')
 parser.add_argument('--learning_rate', type=float, default=0.001, help='Initial learning rate [default: 0.001]')
@@ -52,9 +52,6 @@ os.system('cp train.py %s' % (LOG_DIR)) # bkp of train procedure
 LOG_FOUT = open(os.path.join(LOG_DIR, 'log_train.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
-# NUM_POINT = 2048
-# NUM_CLASSES = 2
-
 BN_INIT_DECAY = 0.5
 BN_DECAY_DECAY_RATE = 0.5
 #BN_DECAY_DECAY_STEP = float(DECAY_STEP * 2)
@@ -64,7 +61,7 @@ BN_DECAY_CLIP = 0.99
 HOSTNAME = socket.gethostname()
 
 ALL_FILES = []
-ALL_FILES.append('/home/felix/Desktop/prj/data/test_neu/testnorm.h5')
+ALL_FILES.append('/home/felix/Desktop/prj/data/gv/xyz_train.h5')
 
 # Load ALL data
 data_batch_list = []
@@ -79,15 +76,9 @@ label_batches = np.concatenate(label_batch_list, 0)
 train_data = data_batches[:,...]
 train_label = label_batches[:]
 
-# TODO: train test split implementieren
-
-train_data = data_batches[train_idxs,...]
-train_label = label_batches[train_idxs]
-test_data = data_batches[test_idxs,...]
-test_label = label_batches[test_idxs]
-print(train_data.shape, train_label.shape)
-print(test_data.shape, test_label.shape)
-
+NUM_POINT = 2048
+NUM_CLASSES = 2
+NUM_FEATURES = train_data.shape[2]
 
 def log_string(out_str):
     LOG_FOUT.write(out_str+'\n')
@@ -197,7 +188,7 @@ def train_one_epoch(sess, ops, train_writer, epoch):
     #print(type(train_data)) # <class 'numpy.ndarray'>
     
     log_string('----')
-    current_data, current_label, _ = provider.shuffle_data(train_data[:,0:NUM_POINT,:], train_label) 
+    current_data, current_label, _ = provider.shuffle_data(train_data[:,0:NUM_POINT,:], train_label)
     
     #print(current_label)
     #print(current_label.shape) # (4, 2048)
