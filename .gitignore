@@ -9,4 +9,8 @@ sem_seg/indoor3d_sem_seg_hdf5_data/
 sem_seg/testdata/
 log/
 sem_seg/log6/
+sem_seg/log6rgb/
+sem_seg/log6rgbnorm/
+sem_seg/log6norm/
+sem_seg/dump/
 log6/
