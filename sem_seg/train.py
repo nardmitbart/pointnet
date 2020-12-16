@@ -52,9 +52,8 @@ os.system('cp train.py %s' % (LOG_DIR)) # bkp of train procedure
 LOG_FOUT = open(os.path.join(LOG_DIR, 'log_train.txt'), 'w')
 LOG_FOUT.write(str(FLAGS)+'\n')
 
-NUM_POINT = 4096
-NUM_CLASSES = 13
-NUM_FEATURES = 9
+# NUM_POINT = 2048
+# NUM_CLASSES = 2
 
 BN_INIT_DECAY = 0.5
 BN_DECAY_DECAY_RATE = 0.5
@@ -64,7 +63,8 @@ BN_DECAY_CLIP = 0.99
 
 HOSTNAME = socket.gethostname()
 
-ALL_FILES = provider.getDataFiles('/home/felix/Desktop/git/pointnet/sem_seg/indoor3d_sem_seg_hdf5_data/all_files.txt')
+ALL_FILES = []
+ALL_FILES.append('/home/felix/Desktop/prj/data/test_neu/testnorm.h5')
 
 # Load ALL data
 data_batch_list = []
@@ -75,11 +75,9 @@ for h5_filename in ALL_FILES:
     label_batch_list.append(label_batch)
 data_batches = np.concatenate(data_batch_list, 0)
 label_batches = np.concatenate(label_batch_list, 0)
-print(data_batches.shape)
-print(label_batches.shape)
 
-train_idxs = [0, 1, 2, 3]
-test_idxs = [4, 5]
+train_data = data_batches[:,...]
+train_label = label_batches[:]
 
 # TODO: train test split implementieren
 
@@ -181,7 +179,7 @@ def train():
             sys.stdout.flush()
              
             train_one_epoch(sess, ops, train_writer, epoch)
-            eval_one_epoch(sess, ops, test_writer)
+            # eval_one_epoch(sess, ops, test_writer)
             
             # Save the variables to disk.
             if epoch % 10 == 0:
@@ -238,6 +236,7 @@ def train_one_epoch(sess, ops, train_writer, epoch):
 
         train_writer.add_summary(summary, step)
         pred_val = np.argmax(pred_val, axis=2)
+
         correct = np.sum(pred_val == current_label[start_idx:end_idx])
         total_correct += correct
         total_seen += (BATCH_SIZE*NUM_POINT)
@@ -295,6 +294,7 @@ def eval_one_epoch(sess, ops, test_writer):
 
         test_writer.add_summary(summary, step)
         pred_val = np.argmax(pred_val, 2)
+
         correct = np.sum(pred_val == current_label[start_idx:end_idx])
         total_correct += correct
         total_seen += (BATCH_SIZE*NUM_POINT)
